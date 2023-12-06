@@ -46,7 +46,22 @@ class CvController extends Controller
 
 public function generateCvPdf($cvId)
 {
+    $user = Auth::user();
+    if (!$user) {
+        return response()->json(['error' => 'Not Authenticated'], 401);
+    }
     $cv = Cv::findOrFail($cvId);
+    $pdf = PDF::loadView('cv', ['cv' => $cv]);
+    return $pdf->download('cv.pdf');
+}
+
+public function genCvPdfByIdUser($userid)
+{
+    $user = Auth::user();
+    if (!$user) {
+        return response()->json(['error' => 'Not Authenticated'], 401);
+    }
+    $cv = Cv::where('user_id', $userid)->firstOrFail();
     $pdf = PDF::loadView('cv', ['cv' => $cv]);
     return $pdf->download('cv.pdf');
 }

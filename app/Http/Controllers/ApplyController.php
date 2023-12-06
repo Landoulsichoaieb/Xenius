@@ -27,4 +27,33 @@ class ApplyController extends Controller
             return response()->json(['error' => 'Not Allowed to Apply'], 401);
         }
     }
+    public function fetchallapplies() {
+        $user = Auth::user();
+        if (!$user) {
+            return response()->json(['error' => 'Not Authenticated'], 401);
+        }
+
+
+        if ($user->role == 0) {
+            return response()->json(['error' => 'Not Authorized'], 403);
+        }
+
+        $applies = Apply::all();
+
+        return response()->json(['message' => 'All applications fetched successfully', 'applies' => $applies], 200);
+    }
+    public function fetchuserapplies() {
+        $user = Auth::user();
+        if (!$user) {
+            return response()->json(['error' => 'Not Authenticated'], 401);
+        }
+
+        if ($user->role == 1) {
+            return response()->json(['error' => 'Not Authorized'], 403);
+        }
+
+        $userApplies = Apply::where('user_id', $user->id)->get();
+
+        return response()->json(['message' => 'User applications fetched successfully', 'applies' => $userApplies], 200);
+    }
 }
