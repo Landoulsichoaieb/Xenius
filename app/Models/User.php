@@ -50,4 +50,8 @@ class User extends Authenticatable
     {
         return $this->hasOne(Cv::class);
     }
+    public function Apply()
+    {
+        return $this->hasMany(Apply::class);
+    }
 }
