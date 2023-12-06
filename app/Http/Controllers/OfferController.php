@@ -30,4 +30,53 @@ class OfferController extends Controller
             return response()->json(['error' => 'Not Allowed to Add an Offer'], 401);
         }
     }
+
+    public function deleteoffer(Request $request) {
+        $user = Auth::user();
+        if (!$user) {
+            return response()->json(['error' => 'Not Authenticated'], 401);
+        }
+
+        $offer = Offer::find($request->id);
+        if (!$offer) {
+            return response()->json(['error' => 'Offer not found'], 404);
+        }
+
+        if ($offer->user_id != $user->id) {
+            return response()->json(['error' => 'Not Authorized to Delete this Offer'], 403);
+        }
+
+        $offer->delete();
+
+        return response()->json(['message' => 'Offer successfully deleted.'], 200);
+    }
+
+    public function editoffer(Request $request) {
+        $user = Auth::user();
+        if (!$user) {
+            return response()->json(['error' => 'Not Authenticated'], 401);
+        }
+
+        $offer = Offer::find($request->id);
+        if (!$offer) {
+            return response()->json(['error' => 'Offer not found'], 404);
+        }
+
+        if ($offer->user_id != $user->id) {
+            return response()->json(['error' => 'Not Authorized to Edit this Offer'], 403);
+        }
+
+        $validator = Validator::make($request->all(), [
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
+        }
+
+        $offer->update($request->all());
+
+        return response()->json(['message' => 'Offer successfully updated.', 'Offer' => $offer], 200);
+    }
 }
