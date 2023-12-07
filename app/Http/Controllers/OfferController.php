@@ -90,8 +90,11 @@ class OfferController extends Controller
             return response()->json(['error' => 'Not Authorized'], 403);
         }
 
-        $userOffers = Offer::where('user_id', $user->id)->get();
+        $userOffers = Offer::with('user')
+                ->where('user_id', $user->id)
+                ->get();
 
         return response()->json(['message' => 'User applications fetched successfully', 'applies' => $userOffers], 200);
     }
+
 }
