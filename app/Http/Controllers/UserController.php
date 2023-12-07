@@ -79,10 +79,26 @@ public function login(Request $req)
         if ($user->email_verified_at === null) {
             return ["error" => "Email has not been verified."];
         }
-        /*return $user;*/
+
         return response()->json(['token' => $token]);
     } else {
         return ["error" => "Email or password is not matched"];
     }
 }
+
+
+public function logout(Request $request)
+{
+    $user = Auth::guard('api')->user();
+
+    if ($user) {
+        $user->api_token = null;
+        $user->save();
+
+        return response()->json(['message' => 'Logged out successfully']);
+    } else {
+        return response()->json(['message' => 'No user is currently logged in.'], 401);
+    }
+}
+
 }

@@ -79,4 +79,19 @@ class OfferController extends Controller
 
         return response()->json(['message' => 'Offer successfully updated.', 'Offer' => $offer], 200);
     }
+
+    public function fetchuseroffers() {
+        $user = Auth::user();
+        if (!$user) {
+            return response()->json(['error' => 'Not Authenticated'], 401);
+        }
+
+        if ($user->role == 1) {
+            return response()->json(['error' => 'Not Authorized'], 403);
+        }
+
+        $userOffers = Offer::where('user_id', $user->id)->get();
+
+        return response()->json(['message' => 'User applications fetched successfully', 'applies' => $userOffers], 200);
+    }
 }

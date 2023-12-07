@@ -18,6 +18,8 @@ Route::post('editoffer', [OfferController::class, 'editoffer'])->middleware('aut
 Route::post('apply', [ApplyController::class, 'apply'])->middleware('auth:api');
 Route::get('fetchallapplies', [ApplyController::class, 'fetchallapplies'])->middleware('auth:api');
 Route::get('fetchuserapplies', [ApplyController::class, 'fetchuserapplies'])->middleware('auth:api');
+Route::post('logout', [UserController::class, 'logout'])->middleware('auth:api');
+Route::post('fetchuseroffers', [OfferController::class, 'fetchuseroffers'])->middleware('auth:api');
 
 Route::get('/email/verification/{token}', [UserController::class, 'verifyEmail'])->name('email.verification');
 
